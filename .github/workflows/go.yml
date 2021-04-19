@@ -46,7 +46,7 @@ jobs:
     - name: Use tag
       run: echo ${{steps.tag.outputs.tag}}
     - name: Tag and Release and Upload
-      uses: jasondavis303/tag-and-release-and-upload@v1.2.0
+      uses: dothq/tag-and-release-and-upload@v1.0.2
       with:
         # secrets.GITHUB_TOKEN, or a token with read/write access to the repo
         github-token: ${{ secrets.GITHUB_TOKEN }}
