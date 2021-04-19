@@ -8,12 +8,10 @@ on:
 jobs:
 
   build_linux:
-    name: Build Linux amd64
+    name: Build Linux
     runs-on: ubuntu-latest
     env: 
       FILENAME: wppscrapper-gui-linux-
-      GOOS: linux
-      GOARCH: amd64
     steps:
     - uses: actions/checkout@v2
     - name: Set up Go
@@ -29,30 +27,42 @@ jobs:
     - name: Build
       run: |
         fyne-cross linux -arch=amd64,386
-        mv fyne-cross/dist/linux-386/wpp-scrapper-gui.tar.gz ${{ env.FILENAME }}384.tar.gz
+        mv fyne-cross/dist/linux-386/wpp-scrapper-gui.tar.gz ${{ env.FILENAME }}386.tar.gz
         mv fyne-cross/dist/linux-amd64/wpp-scrapper-gui.tar.gz ${{ env.FILENAME }}amd64.tar.gz
 
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: wpp-scrapper-gui-linux
         path: |
           ${{ env.FILENAME }}amd64.tar.gz
-          ${{ env.FILENAME }}384.tar.gz
-        
-    - name: Get tag
-      id: tag
-      uses: dawidd6/action-get-tag@v1
-    - name: Use tag
-      run: echo ${{steps.tag.outputs.tag}}
-    - name: Tag and Release and Upload
-      uses: dothq/tag-and-release-and-upload@v1.0.2
-      with:
-        # secrets.GITHUB_TOKEN, or a token with read/write access to the repo
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        # Version to create
-        version: ${{steps.tag.outputs.tag}}
-        # json string array of assets paths to upload to the release. E.G. '[ "win-x64.zip", "linux-x24.zip" ]'
-        assets: '[ "${{ env.FILENAME }}384.tar.gz", "${{ env.FILENAME }}amd64.tar.gz" ]'
-        # bool value to overwrite assets
-        overwrite: true
+          ${{ env.FILENAME }}386.tar.gz
+          
+  build_windows:
+      name: Build Windows
+      runs-on: ubuntu-latest
+      env: 
+        FILENAME: wppscrapper-gui-windows-
+      steps:
+      - uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15
+      - name: Get Fyne cmd
+        run: go get fyne.io/fyne/v2/cmd/fyne
+
+      - name: Get fyne-cross
+        run: go get github.com/fyne-io/fyne-cross
+
+      - name: Build
+        run: |
+          fyne-cross windows -arch=amd64,386
+          mv fyne-cross/dist/windows-386/wpp-scrapper-gui.exe ${{ env.FILENAME }}x86.exe
+          mv fyne-cross/dist/windows-amd64/wpp-scrapper-gui.exe ${{ env.FILENAME }}x64.exe
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: |
+            ${{ env.FILENAME }}x86.exe
+            ${{ env.FILENAME }}x64.exe
