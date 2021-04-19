@@ -90,8 +90,7 @@ func getQrCodeImage(qrCodeValue string) *canvas.Image {
 	qrCode, _ := qr.Encode(qrCodeValue, qr.M, qr.Auto)
 	qrCode, _ = barcode.Scale(qrCode, 512, 512)
 
-	file, _ := os.CreateTemp("", "qrcode_*.png")
-
+	file, _ := os.Create(os.TempDir() + "/wppscrappergui_qrcode.png")
 	defer file.Close()
 	fmt.Println(file.Name())
 	// encode the barcode as png
