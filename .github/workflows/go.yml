@@ -57,8 +57,8 @@ jobs:
       - name: Build
         run: |
           fyne-cross windows -arch=amd64,386
-          mv fyne-cross/dist/windows-386/wpp-scrapper-gui.exe ${{ env.FILENAME }}x86.exe
-          mv fyne-cross/dist/windows-amd64/wpp-scrapper-gui.exe ${{ env.FILENAME }}x64.exe
+          mv fyne-cross/bin/windows-386/wpp-scrapper-gui.exe ${{ env.FILENAME }}x86.exe
+          mv fyne-cross/bin/windows-amd64/wpp-scrapper-gui.exe ${{ env.FILENAME }}x64.exe
 
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
