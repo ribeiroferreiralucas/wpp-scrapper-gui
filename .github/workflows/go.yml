@@ -21,15 +21,14 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: 1.16
-    
-    - name: Get gcc
-      run: sudo apt-get install golang gcc libgl1-mesa-dev xorg-dev
-    
     - name: Get Fyne cmd
       run: go get fyne.io/fyne/v2/cmd/fyne
+    
+    - name: Get fyne-cross
+      run: go get github.com/fyne-io/fyne-cross
       
     - name: Get dependencies
       run: go mod download
 
     - name: Build
-      run: fyne package -os linux -icon myapp.png
+      run: fyne-cross linux -arch=amd64,386
