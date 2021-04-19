@@ -31,6 +31,11 @@ jobs:
       run: |
         fyne-cross linux -arch=amd64,386
         ls
-    - name: Download all workflow run artifacts
-      uses: actions/download-artifact@v2
-
+        cd /home/runner/work/wpp-scrapper-gui/wpp-scrapper-gui/fyne-cross/dist/linux-386/
+        ls
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: dist-without-markdown
+        path: |
+          /home/runner/work/wpp-scrapper-gui/wpp-scrapper-gui/fyne-cross/dist/linux-386/*
