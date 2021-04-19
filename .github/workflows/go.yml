@@ -1,0 +1,106 @@
+name: Go
+
+on:
+  push:
+    tags:
+     - '*'
+ 
+jobs:
+
+  build_linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
+    env: 
+      FILENAME: wppscrapper-gui-linux-
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.15
+    - name: Get Fyne cmd
+      run: go get fyne.io/fyne/v2/cmd/fyne
+    
+    - name: Get fyne-cross
+      run: go get github.com/fyne-io/fyne-cross
+    
+    - name: Build
+      run: |
+        fyne-cross linux -arch=amd64,386
+        mv fyne-cross/dist/linux-386/wpp-scrapper-gui.tar.gz ${{ env.FILENAME }}386.tar.gz
+        mv fyne-cross/dist/linux-amd64/wpp-scrapper-gui.tar.gz ${{ env.FILENAME }}amd64.tar.gz
+
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: |
+          ${{ env.FILENAME }}*.tar.gz
+          
+  build_windows:
+      name: Build Windows
+      runs-on: ubuntu-latest
+      env: 
+        FILENAME: wppscrapper-gui-windows-
+      steps:
+      - uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15
+      - name: Get Fyne cmd
+        run: go get fyne.io/fyne/v2/cmd/fyne
+
+      - name: Get fyne-cross
+        run: go get github.com/fyne-io/fyne-cross
+
+      - name: Build
+        run: |
+          fyne-cross windows -arch=amd64,386
+          mv fyne-cross/bin/windows-386/wpp-scrapper-gui.exe ${{ env.FILENAME }}x86.exe
+          mv fyne-cross/bin/windows-amd64/wpp-scrapper-gui.exe ${{ env.FILENAME }}x64.exe
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: |
+            ${{ env.FILENAME }}*.exe
+  
+  create_release:
+      name: Create Release and Upload Artefacts
+      needs: [build_windows, build_linux]
+      runs-on: ubuntu-latest
+      env: 
+        FILENAME: wppscrapper-gui
+      steps:
+      - name: Get tag
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+      - name: Use tag
+        run: echo ${{steps.tag.outputs.tag}}
+      
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.0.9
+      
+      - name: list artefacts
+        run: ls -R
+        
+      - name: Upload To Github Release
+      # You may pin to the exact commit or the version.
+      # uses: xresloader/upload-to-github-release@52c3ad7cfdac4da6c3197aa4b0485a63bb26bb61
+        uses: xresloader/upload-to-github-release@v1.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # The files or file patterns to upload. You can upload multiple files by split them by semicolon. You can use the glob pattern to find the files.
+          file: artifact/*
+          # If you need to overwrite existing files, add overwrite: true to the with.
+          overwrite: true
+          # The resultant deployment is a draft Release that only repository collaborators can see. This gives you an opportunity to examine and edit the draft release.
+          draft: true
+          # The resultant deployment is a Prerelease. This gives you an opportunity to examine and edit the prerelease.
+          prerelease: true
+          verbose: true
+          # With tags: true, your Releases deployment will trigger if and only if the build is a tagged build.
+          tags: true
+          # Set custom tag name.
+          tag_name: ${{steps.tag.outputs.tag}}
