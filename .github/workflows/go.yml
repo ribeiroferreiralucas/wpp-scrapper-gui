@@ -29,4 +29,4 @@ jobs:
       run: go mod download
 
     - name: Build
-      run: fyne package -os darwin -icon myapp.png
+      run: fyne package -os linux -icon myapp.png
