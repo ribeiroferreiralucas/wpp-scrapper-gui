@@ -66,10 +66,42 @@ jobs:
         with:
           path: |
             ${{ env.FILENAME }}*.exe
-  
+
+  build_osx:
+    name: Build OSX
+    runs-on: ubuntu-latest
+    env: 
+      FILENAME: wppscrapper-gui-linux-
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.15
+    - name: Get Fyne cmd
+      run: go get fyne.io/fyne/v2/cmd/fyne
+    
+    - name: Get fyne-cross
+      run: go get github.com/fyne-io/fyne-cross
+    
+    - name: Build
+      run: |
+        fyne-cross darwin -arch=amd64,386
+        ls -R
+        mv fyne-cross/dist/darwin-386/wpp-scrapper-gui.tar.gz ${{ env.FILENAME }}386.tar.gz
+        mv fyne-cross/dist/darwin-amd64/wpp-scrapper-gui.tar.gz ${{ env.FILENAME }}amd64.tar.gz
+        mv fyne-cross/bin/darwin-386/wpp-scrapper-gui ${{ env.FILENAME }}386
+        mv fyne-cross/bin/darwin-amd64/wpp-scrapper-gui ${{ env.FILENAME }}amd64
+
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: |
+          ${{ env.FILENAME }}*
+
   create_release:
       name: Create Release and Upload Artefacts
-      needs: [build_windows, build_linux]
+      needs: [build_windows, build_linux, build_osx]
       runs-on: ubuntu-latest
       env: 
         FILENAME: wppscrapper-gui
