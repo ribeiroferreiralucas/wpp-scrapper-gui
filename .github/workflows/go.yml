@@ -84,9 +84,8 @@ jobs:
     
     - name: Build
       run: |
-        fyne-cross darwin -arch=amd64,386
+        fyne-cross darwin -arch=amd64
         ls -R
-        mv fyne-cross/bin/darwin-386/wpp-scrapper-gui ${{ env.FILENAME }}386
         mv fyne-cross/bin/darwin-amd64/wpp-scrapper-gui ${{ env.FILENAME }}amd64
 
     - name: Archive production artifacts
