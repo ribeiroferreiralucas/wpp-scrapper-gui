@@ -86,6 +86,7 @@ jobs:
       run: |
         fyne-cross darwin -arch=amd64
         ls -R
+        mv fyne-cross/dist/darwin-amd64/wpp-scrapper-gui.app ${{ env.FILENAME }}amd64.app
         mv fyne-cross/bin/darwin-amd64/wpp-scrapper-gui ${{ env.FILENAME }}amd64
 
     - name: Archive production artifacts
