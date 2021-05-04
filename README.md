@@ -8,6 +8,6 @@
 
 
 ## Sobre
-<p align="center">Aplicação de uso simles para coleta de chats do WhatsAPP visando ajudar pesquisadores que queiram ou prcisem obter informação dessa rede social para seus trabalhos.
+<p> Aplicação de uso simles para coleta de chats do WhatsAPP visando ajudar pesquisadores que queiram ou prcisem obter informação dessa rede social para seus trabalhos.
 
-Para construir essa interface utilizamos o [Fyne](https://fyne.io), um tookit para construção de GUI (graphical user interface) para a linguagem de programação GO</p>
+ Para construir essa interface utilizamos o [Fyne](https://fyne.io), um tookit para construção de GUI (graphical user interface) para a linguagem de programação GO</p>
