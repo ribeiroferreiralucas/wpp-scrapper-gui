@@ -3,7 +3,8 @@
 ## Descrição
 <p align="center">Aplicação com interface gráfica para coleta de informações de conversas do WhasAPP</p>
 
-https://img.shields.io/apm/l/readme?color=MIT&label=license
+<a href="#" title="license" rel="nofollow"><img src="https://img.shields.io/apm/l/readme" alt="Go API Reference"></a>
+<a href="https://pkg.go.dev/fyne.io/fyne/v2?tab=doc" title="Go API Reference" rel="nofollow"><img src="https://img.shields.io/badge/go-documentation-blue.svg?style=flat" alt="Go API Reference"></a>
 <a href="https://github.com/fyne-io/fyne/releases/tag/v2.0.3" title="2.0.3 Release" rel="nofollow"><img src="https://img.shields.io/badge/version-2.0.3-blue.svg?style=flat" alt="2.0.3 release"></a>
 
 
